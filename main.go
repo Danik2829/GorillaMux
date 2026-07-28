@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"restAPI/handlers"
@@ -14,6 +15,10 @@ func main() {
 	stor := storage.NewMapStorage()
 	service := service.NewUserService(stor)
 	handler := handlers.NewHandler(service)
+
+	connStr := "user=postgres password=21282908 dbname=usersdb sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	fmt.Println(db, err)
 
 	mux := mux.NewRouter()
 	mux.HandleFunc("/users", handler.CreateUser).Methods("POST")

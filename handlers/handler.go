@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"restAPI/core"
 	"restAPI/service"
@@ -24,6 +25,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err == nil {
 		jsonErr := h.service.CreateUser(user)
+		fmt.Println(jsonErr)
 		switch jsonErr {
 		case core.InvalidData:
 			http.Error(w, "JSON parsed but values are wrong", http.StatusUnprocessableEntity)

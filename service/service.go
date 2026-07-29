@@ -19,7 +19,9 @@ func (s *UserService) CreateUser(user core.User) error {
 	if _, exist := s.stor.Get(user.ID); exist == nil {
 		return core.UserExist
 	}
-	s.stor.Create(user)
+	if err := s.stor.Create(user); err != nil {
+		return err
+	}
 	return nil
 }
 

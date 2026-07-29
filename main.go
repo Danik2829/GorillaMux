@@ -1,24 +1,23 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"restAPI/handlers"
 	"restAPI/service"
 	"restAPI/storage"
-
-	"github.com/gorilla/mux"
 )
 
 func main() {
-	stor := storage.NewMapStorage()
+	stor, err := storage.NewDbStorage()
+	if err != nil {
+		fmt.Println(err)
+		defer stor.Close()
+		return
+	}
 	service := service.NewUserService(stor)
 	handler := handlers.NewHandler(service)
-
-	connStr := "user=postgres password=21282908 dbname=usersdb sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	fmt.Println(db, err)
 
 	mux := mux.NewRouter()
 	mux.HandleFunc("/users", handler.CreateUser).Methods("POST")
